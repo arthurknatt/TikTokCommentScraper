@@ -54,6 +54,3 @@ with open("../summary.csv",'w', newline='') as s:
   s.writelines(content)
 
 print("\n\x1b[32m[*]\x1b[0m Done scraping {} post(s) for {} comment(s).".format(post_count, comment_count), end="\n\n")
-
-# TODO:
-# each comment should have another element with a link to the post it was made on
