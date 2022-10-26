@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 
-from distutils.command import clean
-import sys
-from csv import reader, writer, QUOTE_ALL, QUOTE_NONE
-from os import system, getcwd, remove, path, rename
-from datetime import datetime as d
-from pyperclip import paste, PyperclipException
-from openpyxl import Workbook
+# This script summarizes the csv files in ../csv_files by merging all
+# of the comment data into ../summary.csv
+# This assumes that the Javascript code was run on posts all by the same
+# TikTok account.
+#
+# To use:
+# Run this script while there are csv files in ../csv_files generated
+# by ScriptTikTokComments.py
+#
+# Output:
+# A single csv file located at ../summary.csv
 
-# importing the required modules
+
+
+from os import path
 import glob
   
 # specifying the path to csv files
@@ -20,8 +26,7 @@ files = glob.glob(path + "/*.csv")
 # creating empty list to hold the content from a csv
 content = []
 
-# checking all the csv files in the 
-# specified path
+# checking all the csv files in the specified path
 post_count = 0
 comment_count = 0
 for filename in files:
@@ -31,19 +36,22 @@ for filename in files:
     all_lines = csvfile.readlines()
     # removing newlines and single quotes. prob not needed
     for line in all_lines:      
-      actual_line = line.rstrip('\n').replace('\'\"','')
-      clean_lines.append(actual_line)
+      line = line.rstrip('\n').replace('\'\"','')
+      clean_lines.append(line)
     # saving header and post url on first iteration
     if post_count == 0:
       csv_header = clean_lines[14] + ",Post URL"
+      # first line of the final content list should be header
       content.append(csv_header)
-    post_url = clean_lines[1][9:]
+      post_url = clean_lines[1][9:]
     # skipping post info/header
-    count = 15
+    line_count = 15
+    # grabbing comment data for this file
+    # and adding the post_url to the end of each row
     for clean_line in clean_lines[15:]:
       clean_line += ",{}".format(post_url)
-      clean_lines[count] = clean_line
-      count += 1
+      clean_lines[line_count] = clean_line
+      line_count += 1
     content.extend(clean_lines[15:])
     comment_count += len(clean_lines[15:])
   post_count += 1
