@@ -147,8 +147,13 @@ with({
     var shares = likesCommentsShares[2] ? likesCommentsShares[2].outerText : "N/A";
     var commentNumberDifference = Math.abs(parseInt(totalComments) - (comments.length));
 
+    // getting the TikTok post id from end of the url
+    var url_split = url.split('/');
+    var post_id = url_split.pop() || url_split.pop();  // handle potential trailing slash
 
-    var csv = 'Now,' + Date() + '\n';
+
+    var csv = post_id + '\n';
+    csv += 'Now,' + Date() + '\n';
     csv += 'Post URL,' + url + '\n';
     csv += 'Publisher Nickname,' + nicknameAndTimePublishedAgo[0] + '\n';
     csv += 'Publisher @,' + publisherProfileUrl + '\n';
@@ -194,4 +199,4 @@ with({
     console.log('CSV copied to clipboard!');
 
     copy(csv);
-})()
+}

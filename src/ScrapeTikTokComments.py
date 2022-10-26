@@ -2,7 +2,7 @@
 
 import sys
 from csv import reader
-from os import system, getcwd, remove, path
+from os import system, getcwd, remove, path, rename
 from datetime import datetime as d
 from pyperclip import paste, PyperclipException
 from openpyxl import Workbook
@@ -29,36 +29,50 @@ except Exception as e:
 	sys.exit(1)
 
 
-print("\r\x1b[32m[*]\x1b[0m Writing CSV from clipboard to file + removing carriage return characters ('\\r').")
+print("\n\x1b[34m[*]\x1b[0m Creating new CSV file to use the Post ID as its name.", end="", flush=True)
 
-wb = Workbook()
-ws = wb.active
+# post_csv = path.join(cur_dir, "../csv_files/", "Comments.csv") # not used for now
 
-print("\x1b[34m[*]\x1b[0m Converting CSV file to Excel Workbook (XLSX).", end="", flush=True)
-line_count = 0
-with open(csv_path, 'r+', encoding="utf-8") as f:
-	for row in reader(f):
-		ws.append(row)
-		line_count += 1
+with open(csv_path,'r') as f:
+	post_id = next(f).replace("\n", "") # saving + skipping the first line
+	with open("../csv_files/" + post_id + ".csv",'w') as f1:
+		for line in f:
+			f1.write(line)
 
-print("\r\x1b[32m[*]\x1b[0m Converting CSV file to Excel Workbook (XLSX).")
 
-print(f"\x1b[32m[*]\x1b[0m Written {line_count} line(s).")
+# print("\r\x1b[32m[*]\x1b[0m Writing CSV from clipboard to file + removing carriage return characters ('\\r').")
 
-print("\x1b[34m[*]\x1b[0m Saving XLSX file.", end="", flush=True)
+# wb = Workbook()
+# ws = wb.active
 
-wb.save(path.join(cur_dir, "..", f"Comments_{d.timestamp(d.now())}.xlsx"))
+# print("\x1b[34m[*]\x1b[0m Converting CSV file to Excel Workbook (XLSX).", end="", flush=True)
+# line_count = 0
+# with open(csv_path, 'r+', encoding="utf-8") as f:
+# 	for row in reader(f):
+# 		ws.append(row)
+# 		line_count += 1
 
-print("\r\x1b[32m[*]\x1b[0m Saving XLSX file.")
+# print("\r\x1b[32m[*]\x1b[0m Converting CSV file to Excel Workbook (XLSX).")
 
-print("\x1b[34m[*]\x1b[0m Deleting CSV file.", end="", flush=True)
+# print(f"\x1b[32m[*]\x1b[0m Written {line_count} line(s).")
 
-print("\r\x1b[34m[*]\x1b[0m Deleting CSV file.", end="")
+# print("\x1b[34m[*]\x1b[0m Saving XLSX file.", end="", flush=True)
+
+# wb.save(path.join(cur_dir, "..", f"Comments_{d.timestamp(d.now())}.xlsx"))
+
+# wb.save(path.join(cur_dir, "..", f"Comments_{d.timestamp(d.now())}.xlsx"))
+
+# print("\r\x1b[32m[*]\x1b[0m Saving XLSX file.")
+
+# print("\x1b[34m[*]\x1b[0m Deleting CSV file.", end="", flush=True)
+
+# print("\r\x1b[34m[*]\x1b[0m Deleting CSV file.", end="")
+
 try:
+	print("\n\x1b[34m[*]\x1b[0m Deleting original CSV file.")
 	remove(path.join(cur_dir, "..", "Comments.csv"))
-	print("\r\x1b[32m[*]\x1b[0m Deleting CSV file.")
 except:
-	print("\r\x1b[31m[*]\x1b[0m Could not delete CSV file.")
+	print("\n\r\x1b[31m[*]\x1b[0m Could not delete CSV file.")
 
 
-print("\x1b[32m[*]\x1b[0m Done.", end="\n\n")
+print("\n\x1b[32m[*]\x1b[0m Done.", end="\n\n")
